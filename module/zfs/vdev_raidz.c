@@ -2087,7 +2087,7 @@ vdev_raidz_shadow_child_done(zio_t *zio)
 }
 
 static void
-vdev_raidz_io_verify(zio_t *zio, raidz_map_t *rm, raidz_row_t *rr, int col)
+vdev_raidz_io_verify(zio_t *zio, raidz_map_t *rm __unused, raidz_row_t *rr, int col)
 {
 #ifdef ZFS_DEBUG
 	range_seg64_t logical_rs, physical_rs, remain_rs;
@@ -2123,6 +2123,10 @@ vdev_raidz_io_verify(zio_t *zio, raidz_map_t *rm, raidz_row_t *rr, int col)
 	} else {
 		ASSERT3U(physical_rs.rs_end, ==, rc->rc_offset + rc->rc_size);
 	}
+#else
+	(void)zio;
+	(void)rr;
+	(void)col;
 #endif
 }
 
@@ -3775,7 +3779,7 @@ raidz_reflow_impl(vdev_t *vd, vdev_raidz_expand_t *vre, range_tree_t *rt,
  * For testing.
  */
 static void
-raidz_expand_pause(spa_t *spa, uint64_t progress)
+raidz_expand_pause(spa_t *spa __unused, uint64_t progress)
 {
 	while (raidz_expand_max_offset_pause != 0 &&
 	    raidz_expand_max_offset_pause <= progress)
@@ -4111,7 +4115,7 @@ vdev_raidz_reflow_copy_scratch(spa_t *spa)
 
 /* ARGSUSED */
 static boolean_t
-spa_raidz_expand_cb_check(void *arg, zthr_t *zthr)
+spa_raidz_expand_cb_check(void *arg, zthr_t *zthr __unused)
 {
 	spa_t *spa = arg;
 

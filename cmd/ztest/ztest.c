@@ -3955,7 +3955,7 @@ ztest_scratch_thread(void *arg)
  */
 /* ARGSUSED */
 void
-ztest_vdev_raidz_attach(ztest_ds_t *zd, uint64_t id)
+ztest_vdev_raidz_attach(ztest_ds_t *zd __unused, uint64_t id __unused)
 {
 	spa_t *spa = ztest_spa;
 	uint64_t newsize, ashift = ztest_get_ashift();
@@ -7779,7 +7779,7 @@ ztest_raidz_expand_run(ztest_shared_t *zs)
 	error = spa_open(ztest_opts.zo_pool, &spa, FTAG);
 	if (error) {
 		VERIFY3S(error, ==, ENOENT);
-		ztest_import_impl(zs);
+		ztest_import_impl();
 		VERIFY0(spa_open(ztest_opts.zo_pool, &spa, FTAG));
 		zs->zs_metaslab_sz =
 		    1ULL << spa->spa_root_vdev->vdev_child[0]->vdev_ms_shift;

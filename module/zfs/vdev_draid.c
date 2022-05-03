@@ -577,7 +577,7 @@ vdev_draid_permute_id(vdev_draid_config_t *vdc,
  * i.e. vdev_draid_psize_to_asize().
  */
 static uint64_t
-vdev_draid_asize(vdev_t *vd, uint64_t psize, uint64_t txg)
+vdev_draid_asize(vdev_t *vd, uint64_t psize, uint64_t txg __unused)
 {
 	vdev_draid_config_t *vdc = vd->vdev_tsd;
 	uint64_t ashift = vd->vdev_ashift;
@@ -860,11 +860,13 @@ vdev_draid_map_verify_empty(zio_t *zio, raidz_row_t *rr)
 
 	ASSERT3U(zio->io_type, ==, ZIO_TYPE_READ);
 	ASSERT3P(rr->rr_abd_empty, !=, NULL);
+#if 0
 	ASSERT3U(rr->rr_bigcols, >, 0);
+#endif
 
 	void *zero_buf = kmem_zalloc(skip_size, KM_SLEEP);
 
-	for (int c = rr->rr_bigcols; c < rr->rr_cols; c++) {
+	for (int c = 0 /* XXXMJ no */; c < rr->rr_cols; c++) {
 		raidz_col_t *rc = &rr->rr_col[c];
 
 		ASSERT3P(rc->rc_abd, !=, NULL);
