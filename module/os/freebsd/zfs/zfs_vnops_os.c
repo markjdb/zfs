@@ -3634,7 +3634,7 @@ zfs_symlink(znode_t *dzp, const char *name, vattr_t *vap,
 		return (SET_ERROR(EILSEQ));
 	}
 
-	if (len > MAXPATHLEN) {
+	if (len >= MAXPATHLEN) {
 		zfs_exit(zfsvfs, FTAG);
 		return (SET_ERROR(ENAMETOOLONG));
 	}
@@ -5773,6 +5773,9 @@ zfs_freebsd_pathconf(struct vop_pathconf_args *ap)
 	switch (ap->a_name) {
 	case _PC_NAME_MAX:
 		*ap->a_retval = NAME_MAX;
+		return (0);
+	case _PC_SYMLINK_MAX:
+		*ap->a_retval = MAXPATHLEN;
 		return (0);
 #if __FreeBSD_version >= 1400032
 	case _PC_DEALLOC_PRESENT:
